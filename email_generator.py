@@ -37,8 +37,7 @@ LAST_NAMES = [
 ]
 
 DEFAULT_DOMAINS = [
-    "gmail.com", "yahoo.com", "outlook.com", "hotmail.com",
-    "mail.com", "protonmail.com", "zoho.com", "icloud.com"
+    "offredaily.sa.com"
 ]
 
 EMAIL_FORMATS = [
