@@ -182,10 +182,40 @@
             padding: 4px 8px;
             border-radius: 4px;
             transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .email-item:hover {
             background: rgba(233, 69, 96, 0.2);
+        }
+
+        .email-text {
+            flex: 1;
+        }
+
+        .btn-copy-single {
+            background: rgba(233, 69, 96, 0.3);
+            border: 1px solid rgba(233, 69, 96, 0.5);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .btn-copy-single:hover {
+            background: rgba(233, 69, 96, 0.6);
+            transform: scale(1.05);
+        }
+
+        .btn-copy-single.copied {
+            background: rgba(0, 184, 148, 0.5);
+            border-color: rgba(0, 184, 148, 0.7);
         }
 
         .stats {
@@ -429,7 +459,7 @@
             resultsCard.style.display = 'block';
 
             emailList.innerHTML = generatedEmails
-                .map((email, i) => `<div class="email-item">${(i + 1).toString().padStart(4, ' ')}. ${email}</div>`)
+                .map((email, i) => `<div class="email-item"><span class="email-text">${(i + 1).toString().padStart(4, ' ')}. ${email}</span><button class="btn-copy-single" onclick="copySingle(this, '${email}')">Salin</button></div>`)
                 .join('');
 
             document.getElementById('resultCount').textContent = `${generatedEmails.length} email`;
@@ -447,7 +477,19 @@
             if (generatedEmails.length === 0) return;
             const text = generatedEmails.join('\n');
             navigator.clipboard.writeText(text).then(() => {
-                showToast('Email berhasil dicopy!');
+                showToast('Semua email berhasil dicopy!');
+            });
+        }
+
+        function copySingle(btn, email) {
+            navigator.clipboard.writeText(email).then(() => {
+                btn.textContent = 'Tersalin!';
+                btn.classList.add('copied');
+                showToast(`Tersalin: ${email}`);
+                setTimeout(() => {
+                    btn.textContent = 'Salin';
+                    btn.classList.remove('copied');
+                }, 2000);
             });
         }
 
