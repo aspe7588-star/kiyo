@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Generator Otomatis Email - OffreDaily</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #e94560, #f5a623);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #aaa;
+            font-size: 0.95em;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #e94560;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #e94560;
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e94560, #f5a623);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 184, 148, 0.4);
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .results-header span {
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .email-list {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .email-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .email-list::-webkit-scrollbar-thumb {
+            background: #e94560;
+            border-radius: 3px;
+        }
+
+        .email-item {
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .email-item:hover {
+            background: rgba(233, 69, 96, 0.2);
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+        }
+
+        .stat-box .number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .stat-box .label {
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #00b894;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .btn {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bot Generator Otomatis Email</h1>
+            <p>Generate email otomatis dengan domain offredaily.sa.com</p>
+        </div>
+
+        <!-- Settings Card -->
+        <div class="card">
+            <h2>Pengaturan</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Jumlah Email</label>
+                    <input type="number" id="emailCount" value="10" min="1" max="10000" placeholder="Jumlah email...">
+                </div>
+                <div class="form-group">
+                    <label>Domain</label>
+                    <input type="text" id="domain" value="offredaily.sa.com" placeholder="Domain email...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Format Email</label>
+                <select id="emailFormat">
+                    <option value="random">Acak (Semua Format)</option>
+                    <option value="firstname.lastname">firstname.lastname (andi.pratama@...)</option>
+                    <option value="firstname_lastname">firstname_lastname (andi_pratama@...)</option>
+                    <option value="firstnamelastname">firstnamelastname (andipratama@...)</option>
+                    <option value="firstlast">firstlast (andipra@...)</option>
+                    <option value="f.lastname">f.lastname (a.pratama@...)</option>
+                    <option value="firstname.l">firstname.l (andi.p@...)</option>
+                    <option value="firstname+number">firstname+number (andi123@...)</option>
+                    <option value="firstname.lastname+number">firstname.lastname+number (andi.pratama99@...)</option>
+                </select>
+            </div>
+            <div>
+                <button class="btn btn-primary" onclick="generateEmails()">Generate Email</button>
+                <button class="btn btn-secondary" onclick="clearResults()">Clear</button>
+            </div>
+        </div>
+
+        <!-- Results Card -->
+        <div class="card" id="resultsCard" style="display: none;">
+            <div class="results-header">
+                <h2>Hasil Generate</h2>
+                <span id="resultCount"></span>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="number" id="statTotal">0</div>
+                    <div class="label">Total Email</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="statDomain">-</div>
+                    <div class="label">Domain</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="statFormat">-</div>
+                    <div class="label">Format</div>
+                </div>
+            </div>
+            <div class="results">
+                <div class="email-list" id="emailList"></div>
+            </div>
+            <div style="margin-top: 15px;">
+                <button class="btn btn-success" onclick="copyAll()">Copy Semua</button>
+                <button class="btn btn-secondary" onclick="downloadTXT()">Download TXT</button>
+                <button class="btn btn-secondary" onclick="downloadCSV()">Download CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Email berhasil dicopy!</div>
+
+    <script>
+        // Database nama
+        const FIRST_NAMES = [
+            "andi", "budi", "citra", "dewi", "eko", "fani", "gita", "hadi",
+            "indah", "joko", "kartika", "lina", "mira", "nanda", "oki",
+            "putri", "reza", "sari", "tono", "udin", "vina", "wati",
+            "xena", "yuni", "zaki", "ahmad", "bambang", "cahya", "dian",
+            "fitri", "galih", "hendra", "irfan", "jasmine", "kevin",
+            "lisa", "maya", "nina", "oscar", "prima", "queen", "rani",
+            "surya", "tika", "umi", "vera", "winda", "yoga", "zahra"
+        ];
+
+        const LAST_NAMES = [
+            "pratama", "santoso", "wijaya", "kusuma", "hidayat", "putra",
+            "sari", "utami", "lestari", "wibowo", "nugroho", "setiawan",
+            "handoko", "susanto", "gunawan", "hartono", "suryadi", "permana",
+            "saputra", "ramadhan", "firmansyah", "kurniawan", "adriansyah",
+            "mahendra", "budiman", "cahyono", "darmawan", "effendi",
+            "fajar", "ginting", "harahap", "iskandar", "junaedi"
+        ];
+
+        let generatedEmails = [];
+
+        function randomChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function randomNumber(min = 1, max = 999) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateSingleEmail(domain, format) {
+            const fname = randomChoice(FIRST_NAMES);
+            const lname = randomChoice(LAST_NAMES);
+            const num = randomNumber();
+            let localPart;
+
+            const fmt = format === "random" ? randomChoice([
+                "firstname.lastname", "firstname_lastname", "firstnamelastname",
+                "firstlast", "f.lastname", "firstname.l", "firstname+number",
+                "firstname.lastname+number"
+            ]) : format;
+
+            switch (fmt) {
+                case "firstname.lastname":
+                    localPart = `${fname}.${lname}`;
+                    break;
+                case "firstname_lastname":
+                    localPart = `${fname}_${lname}`;
+                    break;
+                case "firstnamelastname":
+                    localPart = `${fname}${lname}`;
+                    break;
+                case "firstlast":
+                    localPart = `${fname}${lname.slice(0, 3)}`;
+                    break;
+                case "f.lastname":
+                    localPart = `${fname[0]}.${lname}`;
+                    break;
+                case "firstname.l":
+                    localPart = `${fname}.${lname[0]}`;
+                    break;
+                case "firstname+number":
+                    localPart = `${fname}${num}`;
+                    break;
+                case "firstname.lastname+number":
+                    localPart = `${fname}.${lname}${num}`;
+                    break;
+                default:
+                    localPart = `${fname}.${lname}`;
+            }
+
+            return `${localPart}@${domain}`;
+        }
+
+        function generateEmails() {
+            const count = parseInt(document.getElementById('emailCount').value) || 10;
+            const domain = document.getElementById('domain').value || 'offredaily.sa.com';
+            const format = document.getElementById('emailFormat').value;
+
+            if (count < 1 || count > 10000) {
+                alert('Jumlah email harus antara 1 - 10.000!');
+                return;
+            }
+
+            const emailSet = new Set();
+            let attempts = 0;
+            const maxAttempts = count * 10;
+
+            while (emailSet.size < count && attempts < maxAttempts) {
+                emailSet.add(generateSingleEmail(domain, format));
+                attempts++;
+            }
+
+            generatedEmails = Array.from(emailSet);
+
+            // Display results
+            const resultsCard = document.getElementById('resultsCard');
+            const emailList = document.getElementById('emailList');
+            resultsCard.style.display = 'block';
+
+            emailList.innerHTML = generatedEmails
+                .map((email, i) => `<div class="email-item">${(i + 1).toString().padStart(4, ' ')}. ${email}</div>`)
+                .join('');
+
+            document.getElementById('resultCount').textContent = `${generatedEmails.length} email`;
+            document.getElementById('statTotal').textContent = generatedEmails.length;
+            document.getElementById('statDomain').textContent = domain;
+            document.getElementById('statFormat').textContent = format === 'random' ? 'Acak' : format;
+        }
+
+        function clearResults() {
+            generatedEmails = [];
+            document.getElementById('resultsCard').style.display = 'none';
+        }
+
+        function copyAll() {
+            if (generatedEmails.length === 0) return;
+            const text = generatedEmails.join('\n');
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Email berhasil dicopy!');
+            });
+        }
+
+        function downloadTXT() {
+            if (generatedEmails.length === 0) return;
+            const text = generatedEmails.join('\n');
+            downloadFile(text, 'emails_offredaily.txt', 'text/plain');
+            showToast('File TXT berhasil didownload!');
+        }
+
+        function downloadCSV() {
+            if (generatedEmails.length === 0) return;
+            let csv = 'No,Email\n';
+            generatedEmails.forEach((email, i) => {
+                csv += `${i + 1},${email}\n`;
+            });
+            downloadFile(csv, 'emails_offredaily.csv', 'text/csv');
+            showToast('File CSV berhasil didownload!');
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>
