@@ -53,10 +53,39 @@
             box-shadow: 0 10px 30px rgba(102,126,234,0.2);
             border-color: rgba(102,126,234,0.4);
         }
+        .anime-card .poster-wrap {
+            position: relative;
+            overflow: hidden;
+        }
         .anime-card .poster {
             width: 100%; height: 380px;
             object-fit: cover;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: block;
+        }
+        .anime-card .play-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s; cursor: pointer;
+        }
+        .anime-card:hover .play-overlay { opacity: 1; }
+        .play-btn-icon {
+            width: 60px; height: 60px;
+            background: rgba(255,0,0,0.9);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s;
+        }
+        .play-btn-icon:hover { transform: scale(1.15); }
+        .play-btn-icon::after {
+            content: '';
+            display: block;
+            width: 0; height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid #fff;
+            margin-left: 4px;
         }
         .anime-card .info { padding: 15px; }
         .anime-card .rank {
@@ -89,6 +118,58 @@
             display: -webkit-box; -webkit-line-clamp: 3;
             -webkit-box-orient: vertical; overflow: hidden;
         }
+        .btn-trailer {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 10px; padding: 7px 14px;
+            background: rgba(255,0,0,0.15);
+            border: 1px solid rgba(255,0,0,0.4);
+            border-radius: 8px; color: #ff4444;
+            font-size: 0.8em; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-trailer:hover {
+            background: rgba(255,0,0,0.3);
+            transform: translateY(-1px);
+        }
+        .btn-trailer svg {
+            width: 16px; height: 16px; fill: #ff4444;
+        }
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-video {
+            width: 100%; max-width: 850px;
+            background: #000; border-radius: 12px;
+            overflow: hidden; position: relative;
+        }
+        .modal-video .close-btn {
+            position: absolute; top: -40px; right: 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff; width: 35px; height: 35px;
+            border-radius: 50%; cursor: pointer;
+            font-size: 1.2em; display: flex;
+            align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-video .close-btn:hover { background: rgba(233,69,96,0.5); }
+        .modal-video iframe {
+            width: 100%; aspect-ratio: 16/9;
+            border: none; display: block;
+        }
+        .modal-video .video-title {
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.05);
+            font-size: 0.9em; color: #ccc;
+        }
         @media (max-width: 600px) {
             .header h1 { font-size: 1.7em; }
             .anime-grid { grid-template-columns: 1fr; }
@@ -116,6 +197,15 @@
     <div class="anime-grid" id="animeGrid"></div>
 </div>
 
+<!-- Video Modal -->
+<div class="modal-overlay" id="videoModal" onclick="closeTrailer(event)">
+    <div class="modal-video" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeTrailer()">&times;</button>
+        <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="video-title" id="videoTitle">Trailer</div>
+    </div>
+</div>
+
 <script>
 const animeList = [
     {
@@ -127,6 +217,7 @@ const animeList = [
         genres: ["action", "drama", "fantasy", "thriller"],
         rating: 9.1,
         image: "https://cdn.myanimelist.net/images/anime/10/47347l.jpg",
+        trailer: "MGRm4IzK1SQ",
         desc: "Umat manusia hidup di dalam dinding raksasa untuk berlindung dari Titan pemakan manusia. Eren Yeager bersumpah membasmi semua Titan setelah kampung halamannya dihancurkan."
     },
     {
@@ -138,6 +229,7 @@ const animeList = [
         genres: ["action", "adventure", "drama", "fantasy"],
         rating: 9.2,
         image: "https://cdn.myanimelist.net/images/anime/1208/94745l.jpg",
+        trailer: "--IcmZkvL0Q",
         desc: "Dua bersaudara Edward dan Alphonse Elric mencari Philosopher's Stone untuk memulihkan tubuh mereka setelah percobaan alkimia yang gagal."
     },
     {
@@ -149,6 +241,7 @@ const animeList = [
         genres: ["thriller", "drama"],
         rating: 9.0,
         image: "https://cdn.myanimelist.net/images/anime/9/9453l.jpg",
+        trailer: "NlJZ-YgAt-c",
         desc: "Light Yagami menemukan buku catatan supranatural yang bisa membunuh siapapun yang namanya ditulis di dalamnya. Dimulailah permainan kucing-kucingan dengan detektif misterius L."
     },
     {
@@ -160,6 +253,7 @@ const animeList = [
         genres: ["action", "adventure", "fantasy"],
         rating: 8.9,
         image: "https://cdn.myanimelist.net/images/anime/6/73245l.jpg",
+        trailer: "S8_YwFLCp4c",
         desc: "Monkey D. Luffy berlayar bersama kru Topi Jerami mencari harta karun legendaris One Piece untuk menjadi Raja Bajak Laut."
     },
     {
@@ -171,6 +265,7 @@ const animeList = [
         genres: ["action", "adventure", "drama"],
         rating: 8.6,
         image: "https://cdn.myanimelist.net/images/anime/5/17407l.jpg",
+        trailer: "1dy2zPPrKj0",
         desc: "Naruto Uzumaki kembali setelah 2.5 tahun berlatih. Ia harus menyelamatkan sahabatnya Sasuke dan menghadapi organisasi Akatsuki."
     },
     {
@@ -182,6 +277,7 @@ const animeList = [
         genres: ["action", "fantasy", "drama"],
         rating: 8.7,
         image: "https://cdn.myanimelist.net/images/anime/1286/99889l.jpg",
+        trailer: "VQGCKyvRw3A",
         desc: "Tanjiro Kamado menjadi pemburu iblis setelah keluarganya dibantai dan adiknya berubah menjadi iblis. Ia berjuang mencari obat untuk menyembuhkan adiknya."
     },
     {
@@ -193,6 +289,7 @@ const animeList = [
         genres: ["action", "fantasy", "thriller"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/1171/109222l.jpg",
+        trailer: "4A_X-Dvl0ws",
         desc: "Yuji Itadori menelan jari kutukan terkuat Ryomen Sukuna dan masuk ke dunia jujutsu sorcerer untuk mengumpulkan semua jari Sukuna."
     },
     {
@@ -204,6 +301,7 @@ const animeList = [
         genres: ["action", "adventure", "fantasy"],
         rating: 9.1,
         image: "https://cdn.myanimelist.net/images/anime/1337/99013l.jpg",
+        trailer: "d6kBeJjTGnY",
         desc: "Gon Freecss bertualang menjadi Hunter untuk menemukan ayahnya. Salah satu anime dengan sistem power terbaik dan arc yang luar biasa."
     },
     {
@@ -215,6 +313,7 @@ const animeList = [
         genres: ["sci-fi", "thriller", "drama"],
         rating: 9.1,
         image: "https://cdn.myanimelist.net/images/anime/5/73199l.jpg",
+        trailer: "27OZc-ku6is",
         desc: "Okabe Rintaro secara tidak sengaja menciptakan mesin waktu dari microwave. Ia harus menghadapi konsekuensi dari mengubah masa lalu."
     },
     {
@@ -226,6 +325,7 @@ const animeList = [
         genres: ["action", "sci-fi", "drama", "thriller"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/5/50331l.jpg",
+        trailer: "UKAwzRuLKi0",
         desc: "Lelouch mendapat kekuatan Geass yang bisa memerintah siapapun. Ia menggunakan kecerdasannya untuk memberontak melawan Kekaisaran Britannia."
     },
     {
@@ -237,6 +337,7 @@ const animeList = [
         genres: ["romance", "drama", "fantasy"],
         rating: 9.0,
         image: "https://cdn.myanimelist.net/images/anime/5/87048l.jpg",
+        trailer: "xU47nhyMt98",
         desc: "Dua remaja yang belum pernah bertemu saling bertukar tubuh secara misterius. Film anime terlaris sepanjang masa oleh Makoto Shinkai."
     },
     {
@@ -248,6 +349,7 @@ const animeList = [
         genres: ["action", "comedy", "drama"],
         rating: 8.6,
         image: "https://cdn.myanimelist.net/images/anime/1441/122795l.jpg",
+        trailer: "ofXigq9ckMo",
         desc: "Seorang mata-mata, pembunuh bayaran, dan telepat membentuk keluarga palsu tanpa mengetahui identitas rahasia satu sama lain."
     },
     {
@@ -259,6 +361,7 @@ const animeList = [
         genres: ["action", "adventure", "drama"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/1500/103005l.jpg",
+        trailer: "7U7BDn-gU18",
         desc: "Thorfinn tumbuh di antara para Viking dan berjuang mencari balas dendam. Sebuah kisah tentang kekerasan, perdamaian, dan makna hidup."
     },
     {
@@ -270,6 +373,7 @@ const animeList = [
         genres: ["action", "comedy", "drama"],
         rating: 8.6,
         image: "https://cdn.myanimelist.net/images/anime/8/80356l.jpg",
+        trailer: "Cm4DBal2OgM",
         desc: "Mob adalah esper terkuat yang hanya ingin hidup normal. Ketika emosinya mencapai 100%, kekuatan luar biasa meledak tak terkendali."
     },
     {
@@ -281,6 +385,7 @@ const animeList = [
         genres: ["action", "thriller", "fantasy"],
         rating: 8.5,
         image: "https://cdn.myanimelist.net/images/anime/1806/126216l.jpg",
+        trailer: "q15CRdE5Bv0",
         desc: "Denji bergabung dengan iblis Pochita menjadi Chainsaw Man. Ia bekerja sebagai pemburu iblis dengan motivasi sederhana: hidup layak."
     },
     {
@@ -292,6 +397,7 @@ const animeList = [
         genres: ["sci-fi", "drama", "action"],
         rating: 8.5,
         image: "https://cdn.myanimelist.net/images/anime/1314/108941l.jpg",
+        trailer: "13nSISwxrY4",
         desc: "Shinji Ikari dipaksa mengemudikan robot raksasa Eva untuk melawan makhluk misterius Angel. Anime legendaris yang mengubah industri."
     },
     {
@@ -303,6 +409,7 @@ const animeList = [
         genres: ["action", "sci-fi", "drama"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/4/19644l.jpg",
+        trailer: "qig4KOK2R2g",
         desc: "Spike Spiegel dan kru Bebop adalah pemburu bounty di luar angkasa. Perpaduan jazz, aksi, dan filosofi yang tak tertandingi."
     },
     {
@@ -314,6 +421,7 @@ const animeList = [
         genres: ["drama", "romance"],
         rating: 8.9,
         image: "https://cdn.myanimelist.net/images/anime/1122/96435l.jpg",
+        trailer: "nfK6UgLra7g",
         desc: "Shouya Ishida berusaha menebus dosa masa kecilnya kepada Shouko Nishimiya, gadis tuli yang dulu ia bully. Film tentang penebusan dan penerimaan."
     },
     {
@@ -325,6 +433,7 @@ const animeList = [
         genres: ["action", "adventure", "fantasy"],
         rating: 8.4,
         image: "https://cdn.myanimelist.net/images/anime/10/78745l.jpg",
+        trailer: "EPVkcwyLQQ8",
         desc: "Di dunia dimana hampir semua orang punya kekuatan super, Izuku Midoriya yang tanpa kekuatan bermimpi menjadi pahlawan terhebat."
     },
     {
@@ -336,6 +445,7 @@ const animeList = [
         genres: ["action", "adventure", "fantasy"],
         rating: 8.7,
         image: "https://cdn.myanimelist.net/images/anime/1607/117271l.jpg",
+        trailer: "dCSTqE0XBHY",
         desc: "Son Goku dan teman-temannya melindungi Bumi dari ancaman alien, android, dan musuh kosmis. Anime yang mendefinisikan genre shonen."
     }
 ];
@@ -347,7 +457,12 @@ function renderAnime(filter = 'all') {
 
     grid.innerHTML = filtered.map(anime => `
         <div class="anime-card" data-genres="${anime.genres.join(',')}">
-            <img class="poster" src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x400/1a1a2e/667eea?text=${encodeURIComponent(anime.title)}'" loading="lazy" />
+            <div class="poster-wrap">
+                <img class="poster" src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x400/1a1a2e/667eea?text=${encodeURIComponent(anime.title)}'" loading="lazy" />
+                <div class="play-overlay" onclick="playTrailer('${anime.trailer}', '${anime.title}')">
+                    <div class="play-btn-icon"></div>
+                </div>
+            </div>
             <div class="info">
                 <span class="rank">#${anime.rank}</span>
                 <div class="title">${anime.title}</div>
@@ -357,6 +472,10 @@ function renderAnime(filter = 'all') {
                 </div>
                 <div class="rating">&#9733; ${anime.rating}/10</div>
                 <div class="desc">${anime.desc}</div>
+                <button class="btn-trailer" onclick="playTrailer('${anime.trailer}', '${anime.title}')">
+                    <svg viewBox="0 0 24 24"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                    Tonton Trailer
+                </button>
             </div>
         </div>
     `).join('');
@@ -368,6 +487,31 @@ function filterAnime(genre) {
     event.target.classList.add('active');
     renderAnime(genre);
 }
+
+// Play trailer in modal
+function playTrailer(videoId, title) {
+    const modal = document.getElementById('videoModal');
+    const frame = document.getElementById('videoFrame');
+    const titleEl = document.getElementById('videoTitle');
+
+    frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    titleEl.textContent = `Trailer: ${title}`;
+    modal.classList.add('show');
+}
+
+// Close trailer modal
+function closeTrailer(event) {
+    if (event && event.target !== document.getElementById('videoModal')) return;
+    const modal = document.getElementById('videoModal');
+    const frame = document.getElementById('videoFrame');
+    frame.src = '';
+    modal.classList.remove('show');
+}
+
+// ESC key to close
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeTrailer();
+});
 
 // Init
 renderAnime();
