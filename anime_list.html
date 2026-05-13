@@ -201,7 +201,7 @@
 <div class="modal-overlay" id="videoModal" onclick="closeTrailer(event)">
     <div class="modal-video" onclick="event.stopPropagation()">
         <button class="close-btn" onclick="closeTrailer()">&times;</button>
-        <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <div class="video-title" id="videoTitle">Trailer</div>
     </div>
 </div>
@@ -241,7 +241,7 @@ const animeList = [
         genres: ["thriller", "drama"],
         rating: 9.0,
         image: "https://cdn.myanimelist.net/images/anime/9/9453l.jpg",
-        trailer: "NlJZ-YgAt-c",
+        trailer: "LHtdKWJdif4",
         desc: "Light Yagami menemukan buku catatan supranatural yang bisa membunuh siapapun yang namanya ditulis di dalamnya. Dimulailah permainan kucing-kucingan dengan detektif misterius L."
     },
     {
@@ -253,7 +253,7 @@ const animeList = [
         genres: ["action", "adventure", "fantasy"],
         rating: 8.9,
         image: "https://cdn.myanimelist.net/images/anime/6/73245l.jpg",
-        trailer: "S8_YwFLCp4c",
+        trailer: "MCb13lbVGE0",
         desc: "Monkey D. Luffy berlayar bersama kru Topi Jerami mencari harta karun legendaris One Piece untuk menjadi Raja Bajak Laut."
     },
     {
@@ -265,7 +265,7 @@ const animeList = [
         genres: ["action", "adventure", "drama"],
         rating: 8.6,
         image: "https://cdn.myanimelist.net/images/anime/5/17407l.jpg",
-        trailer: "1dy2zPPrKj0",
+        trailer: "TeeKTqAFjFE",
         desc: "Naruto Uzumaki kembali setelah 2.5 tahun berlatih. Ia harus menyelamatkan sahabatnya Sasuke dan menghadapi organisasi Akatsuki."
     },
     {
@@ -289,7 +289,7 @@ const animeList = [
         genres: ["action", "fantasy", "thriller"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/1171/109222l.jpg",
-        trailer: "4A_X-Dvl0ws",
+        trailer: "pkKu9hLT-t8",
         desc: "Yuji Itadori menelan jari kutukan terkuat Ryomen Sukuna dan masuk ke dunia jujutsu sorcerer untuk mengumpulkan semua jari Sukuna."
     },
     {
@@ -313,7 +313,7 @@ const animeList = [
         genres: ["sci-fi", "thriller", "drama"],
         rating: 9.1,
         image: "https://cdn.myanimelist.net/images/anime/5/73199l.jpg",
-        trailer: "27OZc-ku6is",
+        trailer: "uMYhjVwp0Fk",
         desc: "Okabe Rintaro secara tidak sengaja menciptakan mesin waktu dari microwave. Ia harus menghadapi konsekuensi dari mengubah masa lalu."
     },
     {
@@ -325,7 +325,7 @@ const animeList = [
         genres: ["action", "sci-fi", "drama", "thriller"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/5/50331l.jpg",
-        trailer: "UKAwzRuLKi0",
+        trailer: "cZ7zQbMxm28",
         desc: "Lelouch mendapat kekuatan Geass yang bisa memerintah siapapun. Ia menggunakan kecerdasannya untuk memberontak melawan Kekaisaran Britannia."
     },
     {
@@ -337,7 +337,7 @@ const animeList = [
         genres: ["romance", "drama", "fantasy"],
         rating: 9.0,
         image: "https://cdn.myanimelist.net/images/anime/5/87048l.jpg",
-        trailer: "xU47nhyMt98",
+        trailer: "3KR8_igDs1Y",
         desc: "Dua remaja yang belum pernah bertemu saling bertukar tubuh secara misterius. Film anime terlaris sepanjang masa oleh Makoto Shinkai."
     },
     {
@@ -349,7 +349,7 @@ const animeList = [
         genres: ["action", "comedy", "drama"],
         rating: 8.6,
         image: "https://cdn.myanimelist.net/images/anime/1441/122795l.jpg",
-        trailer: "ofXigq9ckMo",
+        trailer: "_VRxEEBa1XU",
         desc: "Seorang mata-mata, pembunuh bayaran, dan telepat membentuk keluarga palsu tanpa mengetahui identitas rahasia satu sama lain."
     },
     {
@@ -361,7 +361,7 @@ const animeList = [
         genres: ["action", "adventure", "drama"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/1500/103005l.jpg",
-        trailer: "7U7BDn-gU18",
+        trailer: "xEVcTStgA4A",
         desc: "Thorfinn tumbuh di antara para Viking dan berjuang mencari balas dendam. Sebuah kisah tentang kekerasan, perdamaian, dan makna hidup."
     },
     {
@@ -373,7 +373,7 @@ const animeList = [
         genres: ["action", "comedy", "drama"],
         rating: 8.6,
         image: "https://cdn.myanimelist.net/images/anime/8/80356l.jpg",
-        trailer: "Cm4DBal2OgM",
+        trailer: "vUV8hYKHFfM",
         desc: "Mob adalah esper terkuat yang hanya ingin hidup normal. Ketika emosinya mencapai 100%, kekuatan luar biasa meledak tak terkendali."
     },
     {
@@ -397,7 +397,7 @@ const animeList = [
         genres: ["sci-fi", "drama", "action"],
         rating: 8.5,
         image: "https://cdn.myanimelist.net/images/anime/1314/108941l.jpg",
-        trailer: "13nSISwxrY4",
+        trailer: "UMjGSEgCHzc",
         desc: "Shinji Ikari dipaksa mengemudikan robot raksasa Eva untuk melawan makhluk misterius Angel. Anime legendaris yang mengubah industri."
     },
     {
@@ -409,7 +409,7 @@ const animeList = [
         genres: ["action", "sci-fi", "drama"],
         rating: 8.8,
         image: "https://cdn.myanimelist.net/images/anime/4/19644l.jpg",
-        trailer: "qig4KOK2R2g",
+        trailer: "RI08P5SaJNU",
         desc: "Spike Spiegel dan kru Bebop adalah pemburu bounty di luar angkasa. Perpaduan jazz, aksi, dan filosofi yang tak tertandingi."
     },
     {
@@ -433,7 +433,7 @@ const animeList = [
         genres: ["action", "adventure", "fantasy"],
         rating: 8.4,
         image: "https://cdn.myanimelist.net/images/anime/10/78745l.jpg",
-        trailer: "EPVkcwyLQQ8",
+        trailer: "D5fYOnwYkj4",
         desc: "Di dunia dimana hampir semua orang punya kekuatan super, Izuku Midoriya yang tanpa kekuatan bermimpi menjadi pahlawan terhebat."
     },
     {
@@ -445,7 +445,7 @@ const animeList = [
         genres: ["action", "adventure", "fantasy"],
         rating: 8.7,
         image: "https://cdn.myanimelist.net/images/anime/1607/117271l.jpg",
-        trailer: "dCSTqE0XBHY",
+        trailer: "OYKMGzBTOiE",
         desc: "Son Goku dan teman-temannya melindungi Bumi dari ancaman alien, android, dan musuh kosmis. Anime yang mendefinisikan genre shonen."
     }
 ];
@@ -494,18 +494,20 @@ function playTrailer(videoId, title) {
     const frame = document.getElementById('videoFrame');
     const titleEl = document.getElementById('videoTitle');
 
-    frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-    titleEl.textContent = `Trailer: ${title}`;
+    frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+    titleEl.innerHTML = `Trailer: ${title} | <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" style="color:#667eea;text-decoration:underline;">Buka di YouTube</a>`;
     modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
 }
 
 // Close trailer modal
 function closeTrailer(event) {
-    if (event && event.target !== document.getElementById('videoModal')) return;
+    if (event && event.target && event.target !== document.getElementById('videoModal')) return;
     const modal = document.getElementById('videoModal');
     const frame = document.getElementById('videoFrame');
     frame.src = '';
     modal.classList.remove('show');
+    document.body.style.overflow = '';
 }
 
 // ESC key to close
