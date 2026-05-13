@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Anime Terbaik Wajib Ditonton</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 {
+            font-size: 2.5em; margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { color: #aaa; font-size: 1em; }
+        .filter-bar {
+            display: flex; gap: 10px; flex-wrap: wrap;
+            justify-content: center; margin-bottom: 30px;
+        }
+        .filter-btn {
+            padding: 8px 18px; border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px; background: rgba(255,255,255,0.05);
+            color: #ccc; cursor: pointer; font-size: 0.85em;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent; color: #fff;
+        }
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .anime-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .anime-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.2);
+            border-color: rgba(102,126,234,0.4);
+        }
+        .anime-card .poster {
+            width: 100%; height: 380px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .anime-card .info { padding: 15px; }
+        .anime-card .rank {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff; font-weight: 700;
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 0.75em; margin-bottom: 8px;
+        }
+        .anime-card .title {
+            font-size: 1.1em; font-weight: 700;
+            margin-bottom: 5px; color: #fff;
+        }
+        .anime-card .meta {
+            font-size: 0.8em; color: #888; margin-bottom: 8px;
+        }
+        .anime-card .genre-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+        .anime-card .genre-tag {
+            padding: 2px 8px; border-radius: 10px;
+            font-size: 0.7em; background: rgba(255,255,255,0.08);
+            color: #aaa; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .anime-card .rating {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 0.85em; color: #feca57; font-weight: 600;
+        }
+        .anime-card .desc {
+            font-size: 0.8em; color: #888; margin-top: 8px;
+            line-height: 1.5;
+            display: -webkit-box; -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.7em; }
+            .anime-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Anime Terbaik Wajib Ditonton</h1>
+        <p>Daftar 20 anime legendaris yang harus kamu tonton seumur hidup</p>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterAnime('all')">Semua</button>
+        <button class="filter-btn" onclick="filterAnime('action')">Action</button>
+        <button class="filter-btn" onclick="filterAnime('adventure')">Adventure</button>
+        <button class="filter-btn" onclick="filterAnime('drama')">Drama</button>
+        <button class="filter-btn" onclick="filterAnime('fantasy')">Fantasy</button>
+        <button class="filter-btn" onclick="filterAnime('thriller')">Thriller</button>
+        <button class="filter-btn" onclick="filterAnime('romance')">Romance</button>
+        <button class="filter-btn" onclick="filterAnime('sci-fi')">Sci-Fi</button>
+    </div>
+
+    <div class="anime-grid" id="animeGrid"></div>
+</div>
+
+<script>
+const animeList = [
+    {
+        rank: 1,
+        title: "Attack on Titan",
+        japanese: "Shingeki no Kyojin",
+        year: "2013-2023",
+        episodes: "87 Episodes",
+        genres: ["action", "drama", "fantasy", "thriller"],
+        rating: 9.1,
+        image: "https://cdn.myanimelist.net/images/anime/10/47347l.jpg",
+        desc: "Umat manusia hidup di dalam dinding raksasa untuk berlindung dari Titan pemakan manusia. Eren Yeager bersumpah membasmi semua Titan setelah kampung halamannya dihancurkan."
+    },
+    {
+        rank: 2,
+        title: "Fullmetal Alchemist: Brotherhood",
+        japanese: "Hagane no Renkinjutsushi",
+        year: "2009-2010",
+        episodes: "64 Episodes",
+        genres: ["action", "adventure", "drama", "fantasy"],
+        rating: 9.2,
+        image: "https://cdn.myanimelist.net/images/anime/1208/94745l.jpg",
+        desc: "Dua bersaudara Edward dan Alphonse Elric mencari Philosopher's Stone untuk memulihkan tubuh mereka setelah percobaan alkimia yang gagal."
+    },
+    {
+        rank: 3,
+        title: "Death Note",
+        japanese: "Desu Noto",
+        year: "2006-2007",
+        episodes: "37 Episodes",
+        genres: ["thriller", "drama"],
+        rating: 9.0,
+        image: "https://cdn.myanimelist.net/images/anime/9/9453l.jpg",
+        desc: "Light Yagami menemukan buku catatan supranatural yang bisa membunuh siapapun yang namanya ditulis di dalamnya. Dimulailah permainan kucing-kucingan dengan detektif misterius L."
+    },
+    {
+        rank: 4,
+        title: "One Piece",
+        japanese: "Wan Piisu",
+        year: "1999-Ongoing",
+        episodes: "1100+ Episodes",
+        genres: ["action", "adventure", "fantasy"],
+        rating: 8.9,
+        image: "https://cdn.myanimelist.net/images/anime/6/73245l.jpg",
+        desc: "Monkey D. Luffy berlayar bersama kru Topi Jerami mencari harta karun legendaris One Piece untuk menjadi Raja Bajak Laut."
+    },
+    {
+        rank: 5,
+        title: "Naruto Shippuden",
+        japanese: "Naruto: Shippuuden",
+        year: "2007-2017",
+        episodes: "500 Episodes",
+        genres: ["action", "adventure", "drama"],
+        rating: 8.6,
+        image: "https://cdn.myanimelist.net/images/anime/5/17407l.jpg",
+        desc: "Naruto Uzumaki kembali setelah 2.5 tahun berlatih. Ia harus menyelamatkan sahabatnya Sasuke dan menghadapi organisasi Akatsuki."
+    },
+    {
+        rank: 6,
+        title: "Demon Slayer",
+        japanese: "Kimetsu no Yaiba",
+        year: "2019-Ongoing",
+        episodes: "55+ Episodes",
+        genres: ["action", "fantasy", "drama"],
+        rating: 8.7,
+        image: "https://cdn.myanimelist.net/images/anime/1286/99889l.jpg",
+        desc: "Tanjiro Kamado menjadi pemburu iblis setelah keluarganya dibantai dan adiknya berubah menjadi iblis. Ia berjuang mencari obat untuk menyembuhkan adiknya."
+    },
+    {
+        rank: 7,
+        title: "Jujutsu Kaisen",
+        japanese: "Jujutsu Kaisen",
+        year: "2020-Ongoing",
+        episodes: "47+ Episodes",
+        genres: ["action", "fantasy", "thriller"],
+        rating: 8.8,
+        image: "https://cdn.myanimelist.net/images/anime/1171/109222l.jpg",
+        desc: "Yuji Itadori menelan jari kutukan terkuat Ryomen Sukuna dan masuk ke dunia jujutsu sorcerer untuk mengumpulkan semua jari Sukuna."
+    },
+    {
+        rank: 8,
+        title: "Hunter x Hunter (2011)",
+        japanese: "Hunter x Hunter",
+        year: "2011-2014",
+        episodes: "148 Episodes",
+        genres: ["action", "adventure", "fantasy"],
+        rating: 9.1,
+        image: "https://cdn.myanimelist.net/images/anime/1337/99013l.jpg",
+        desc: "Gon Freecss bertualang menjadi Hunter untuk menemukan ayahnya. Salah satu anime dengan sistem power terbaik dan arc yang luar biasa."
+    },
+    {
+        rank: 9,
+        title: "Steins;Gate",
+        japanese: "Shutainzu Geto",
+        year: "2011",
+        episodes: "24 Episodes",
+        genres: ["sci-fi", "thriller", "drama"],
+        rating: 9.1,
+        image: "https://cdn.myanimelist.net/images/anime/5/73199l.jpg",
+        desc: "Okabe Rintaro secara tidak sengaja menciptakan mesin waktu dari microwave. Ia harus menghadapi konsekuensi dari mengubah masa lalu."
+    },
+    {
+        rank: 10,
+        title: "Code Geass",
+        japanese: "Kodo Giasu",
+        year: "2006-2008",
+        episodes: "50 Episodes",
+        genres: ["action", "sci-fi", "drama", "thriller"],
+        rating: 8.8,
+        image: "https://cdn.myanimelist.net/images/anime/5/50331l.jpg",
+        desc: "Lelouch mendapat kekuatan Geass yang bisa memerintah siapapun. Ia menggunakan kecerdasannya untuk memberontak melawan Kekaisaran Britannia."
+    },
+    {
+        rank: 11,
+        title: "Your Name",
+        japanese: "Kimi no Na wa",
+        year: "2016",
+        episodes: "Film",
+        genres: ["romance", "drama", "fantasy"],
+        rating: 9.0,
+        image: "https://cdn.myanimelist.net/images/anime/5/87048l.jpg",
+        desc: "Dua remaja yang belum pernah bertemu saling bertukar tubuh secara misterius. Film anime terlaris sepanjang masa oleh Makoto Shinkai."
+    },
+    {
+        rank: 12,
+        title: "Spy x Family",
+        japanese: "Supai Famiri",
+        year: "2022-Ongoing",
+        episodes: "37+ Episodes",
+        genres: ["action", "comedy", "drama"],
+        rating: 8.6,
+        image: "https://cdn.myanimelist.net/images/anime/1441/122795l.jpg",
+        desc: "Seorang mata-mata, pembunuh bayaran, dan telepat membentuk keluarga palsu tanpa mengetahui identitas rahasia satu sama lain."
+    },
+    {
+        rank: 13,
+        title: "Vinland Saga",
+        japanese: "Vinrando Saga",
+        year: "2019-2023",
+        episodes: "48 Episodes",
+        genres: ["action", "adventure", "drama"],
+        rating: 8.8,
+        image: "https://cdn.myanimelist.net/images/anime/1500/103005l.jpg",
+        desc: "Thorfinn tumbuh di antara para Viking dan berjuang mencari balas dendam. Sebuah kisah tentang kekerasan, perdamaian, dan makna hidup."
+    },
+    {
+        rank: 14,
+        title: "Mob Psycho 100",
+        japanese: "Mobu Saiko Hyaku",
+        year: "2016-2022",
+        episodes: "37 Episodes",
+        genres: ["action", "comedy", "drama"],
+        rating: 8.6,
+        image: "https://cdn.myanimelist.net/images/anime/8/80356l.jpg",
+        desc: "Mob adalah esper terkuat yang hanya ingin hidup normal. Ketika emosinya mencapai 100%, kekuatan luar biasa meledak tak terkendali."
+    },
+    {
+        rank: 15,
+        title: "Chainsaw Man",
+        japanese: "Chensoman",
+        year: "2022-Ongoing",
+        episodes: "12+ Episodes",
+        genres: ["action", "thriller", "fantasy"],
+        rating: 8.5,
+        image: "https://cdn.myanimelist.net/images/anime/1806/126216l.jpg",
+        desc: "Denji bergabung dengan iblis Pochita menjadi Chainsaw Man. Ia bekerja sebagai pemburu iblis dengan motivasi sederhana: hidup layak."
+    },
+    {
+        rank: 16,
+        title: "Neon Genesis Evangelion",
+        japanese: "Shinseiki Evangelion",
+        year: "1995-1996",
+        episodes: "26 Episodes",
+        genres: ["sci-fi", "drama", "action"],
+        rating: 8.5,
+        image: "https://cdn.myanimelist.net/images/anime/1314/108941l.jpg",
+        desc: "Shinji Ikari dipaksa mengemudikan robot raksasa Eva untuk melawan makhluk misterius Angel. Anime legendaris yang mengubah industri."
+    },
+    {
+        rank: 17,
+        title: "Cowboy Bebop",
+        japanese: "Kauboi Bibappu",
+        year: "1998-1999",
+        episodes: "26 Episodes",
+        genres: ["action", "sci-fi", "drama"],
+        rating: 8.8,
+        image: "https://cdn.myanimelist.net/images/anime/4/19644l.jpg",
+        desc: "Spike Spiegel dan kru Bebop adalah pemburu bounty di luar angkasa. Perpaduan jazz, aksi, dan filosofi yang tak tertandingi."
+    },
+    {
+        rank: 18,
+        title: "A Silent Voice",
+        japanese: "Koe no Katachi",
+        year: "2016",
+        episodes: "Film",
+        genres: ["drama", "romance"],
+        rating: 8.9,
+        image: "https://cdn.myanimelist.net/images/anime/1122/96435l.jpg",
+        desc: "Shouya Ishida berusaha menebus dosa masa kecilnya kepada Shouko Nishimiya, gadis tuli yang dulu ia bully. Film tentang penebusan dan penerimaan."
+    },
+    {
+        rank: 19,
+        title: "My Hero Academia",
+        japanese: "Boku no Hero Academia",
+        year: "2016-2024",
+        episodes: "138 Episodes",
+        genres: ["action", "adventure", "fantasy"],
+        rating: 8.4,
+        image: "https://cdn.myanimelist.net/images/anime/10/78745l.jpg",
+        desc: "Di dunia dimana hampir semua orang punya kekuatan super, Izuku Midoriya yang tanpa kekuatan bermimpi menjadi pahlawan terhebat."
+    },
+    {
+        rank: 20,
+        title: "Dragon Ball Z",
+        japanese: "Doragon Boru Zetto",
+        year: "1989-1996",
+        episodes: "291 Episodes",
+        genres: ["action", "adventure", "fantasy"],
+        rating: 8.7,
+        image: "https://cdn.myanimelist.net/images/anime/1607/117271l.jpg",
+        desc: "Son Goku dan teman-temannya melindungi Bumi dari ancaman alien, android, dan musuh kosmis. Anime yang mendefinisikan genre shonen."
+    }
+];
+
+// Render anime cards
+function renderAnime(filter = 'all') {
+    const grid = document.getElementById('animeGrid');
+    const filtered = filter === 'all' ? animeList : animeList.filter(a => a.genres.includes(filter));
+
+    grid.innerHTML = filtered.map(anime => `
+        <div class="anime-card" data-genres="${anime.genres.join(',')}">
+            <img class="poster" src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x400/1a1a2e/667eea?text=${encodeURIComponent(anime.title)}'" loading="lazy" />
+            <div class="info">
+                <span class="rank">#${anime.rank}</span>
+                <div class="title">${anime.title}</div>
+                <div class="meta">${anime.japanese} | ${anime.year} | ${anime.episodes}</div>
+                <div class="genre-tags">
+                    ${anime.genres.map(g => `<span class="genre-tag">${g}</span>`).join('')}
+                </div>
+                <div class="rating">&#9733; ${anime.rating}/10</div>
+                <div class="desc">${anime.desc}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Filter
+function filterAnime(genre) {
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    renderAnime(genre);
+}
+
+// Init
+renderAnime();
+</script>
+</body>
+</html>
