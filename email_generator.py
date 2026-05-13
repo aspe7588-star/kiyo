@@ -37,7 +37,9 @@ LAST_NAMES = [
 ]
 
 DEFAULT_DOMAINS = [
-    "offredaily.sa.com"
+    "offredaily.sa.com",
+    "ctm.edu.pl",
+    "jobsdeforyou.sa.com"
 ]
 
 EMAIL_FORMATS = [
