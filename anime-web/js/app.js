@@ -221,6 +221,70 @@ async function setupHero(animeList) {
 
 // ===== DETAIL MODAL =====
 
+/**
+ * Build watch/streaming links for an anime.
+ * Uses Jikan streaming data + generates search URLs for major platforms.
+ */
+function buildWatchLinks(anime) {
+    const title = encodeURIComponent(anime.title || "");
+    const malUrl = anime.url || `https://myanimelist.net/anime/${anime.mal_id}`;
+
+    // Jikan provides streaming links (if available)
+    const streaming = anime.streaming || [];
+
+    // Always provide search links for popular platforms
+    const platforms = [
+        { name: "Crunchyroll", icon: "🟠", url: `https://www.crunchyroll.com/search?q=${title}` },
+        { name: "YouTube", icon: "▶️", url: `https://www.youtube.com/results?search_query=${title}+full+episode+anime` },
+        { name: "Netflix", icon: "🔴", url: `https://www.netflix.com/search?q=${encodeURIComponent(anime.title || "")}` },
+        { name: "Bilibili", icon: "📺", url: `https://www.bilibili.tv/en/search?keyword=${title}` },
+        { name: "iQIYI", icon: "🟢", url: `https://www.iq.com/search?query=${title}` },
+        { name: "MyAnimeList", icon: "📋", url: malUrl },
+    ];
+
+    // Merge with Jikan streaming data (often has Crunchyroll/Funimation direct links)
+    const jikanLinks = streaming.map((s) => ({
+        name: s.name,
+        icon: "🔗",
+        url: s.url,
+    }));
+
+    // Combine: Jikan links first (direct), then platform search fallbacks
+    const allLinks = [...jikanLinks];
+    const jikanNames = jikanLinks.map((l) => l.name.toLowerCase());
+    platforms.forEach((p) => {
+        if (!jikanNames.includes(p.name.toLowerCase())) {
+            allLinks.push(p);
+        }
+    });
+
+    let html = `
+        <div class="watch-links-section">
+            <h3 class="watch-links-title">🎬 Link Nonton</h3>
+            <div class="watch-links-grid">
+    `;
+
+    allLinks.forEach((link) => {
+        html += `
+            <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="watch-link-btn">
+                <span class="watch-link-icon">${link.icon}</span>
+                <span class="watch-link-name">${link.name}</span>
+                <span class="watch-link-arrow">→</span>
+            </a>
+        `;
+    });
+
+    html += `
+            </div>
+            <p class="watch-links-note">* Link mengarah ke platform resmi. Ketersediaan tergantung wilayah.</p>
+        </div>
+    `;
+
+    return html;
+}
+
+// ===== DETAIL MODAL (MAIN) =====
+
 async function openDetail(malId) {
     elements.modalOverlay.classList.remove("hidden");
     document.body.style.overflow = "hidden";
@@ -308,6 +372,13 @@ async function openDetail(malId) {
             elements.modalTrailer.innerHTML = `
                 <p style="color: var(--text-muted); font-size: 0.85rem;">Trailer tidak tersedia.</p>
             `;
+        }
+
+        // Watch Links — link ke platform streaming resmi
+        const watchLinks = buildWatchLinks(anime);
+        const modalWatchLinks = $("#modalWatchLinks");
+        if (modalWatchLinks) {
+            modalWatchLinks.innerHTML = watchLinks;
         }
     } catch (err) {
         console.error("Error fetching detail:", err);

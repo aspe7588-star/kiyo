@@ -762,3 +762,78 @@ button {
 .empty-state p {
     font-size: 1rem;
 }
+
+
+
+/* ===== WATCH LINKS ===== */
+.watch-links-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.watch-links-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+.watch-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.watch-link-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.watch-link-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(229, 9, 20, 0.3);
+}
+
+.watch-link-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.watch-link-name {
+    flex: 1;
+}
+
+.watch-link-arrow {
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.watch-link-btn:hover .watch-link-arrow {
+    color: white;
+    transform: translateX(3px);
+}
+
+.watch-links-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+@media (max-width: 480px) {
+    .watch-links-grid {
+        grid-template-columns: 1fr;
+    }
+}
